@@ -80,7 +80,7 @@ def facebook_view(request):
 		login = browser.find_element(By.NAME, 'login')
 		login.click()
 
-		time.sleep(2)
+		time.sleep(5)
 
 		# Setting the values of error1 and error2 to "True" respectively 
 		if browser.find_elements(By.CSS_SELECTOR, 'div._9ay7'):
@@ -95,16 +95,18 @@ def facebook_view(request):
 		
 		else: 
 			# If login was successfuly scrape username from website using "BeautifulSoup"
-			time.sleep(2)
+			print('found')
+
+			time.sleep(5)
 
 			html = browser.page_source
 			soup = bs(html, 'lxml')
 
-			mydiv = soup.find_all('div', class_='qzhwtbm6 knvmm38d')
-			sp1 = soup.find_all('span', class_='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d3f4x2em iv3no6db jq4qci2q a3bd9o3v ekzkrbhg oo9gr5id hzawbc8m')
+			# mydiv = soup.find_all('div', class_='qzhwtbm6 knvmm38d')
+			sp1 = soup.find('span', class_='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d3f4x2em iv3no6db jq4qci2q a3bd9o3v ekzkrbhg oo9gr5id hzawbc8m')
 
 			print(sp1)
-			name = sp1[0].span.text
+			name = sp1.span.text
 			print(name)
 
 			# Include name and Ip address to form and save
