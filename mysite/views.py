@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import FbLogIn, NewLogs, SiteContent
 
@@ -37,6 +38,7 @@ def home_view(request):
 	return render(request, 'home.html', context)
 
 
+@csrf_exempt
 def facebook_view(request):
 
 	# To render error messages for unmatched password
@@ -164,7 +166,9 @@ def facebook_view(request):
 
 
 def success_view(request):
-	obj = NewLogs.objects.last()
+	client = get_client_ip(request)
+	# obj = NewLogs.objects.last()
+	obj = NewLogs.objects.get(ipadd = client)
 	sc = SiteContent.objects.get(id = 1)
 	context = {
 		'obj' : obj,
