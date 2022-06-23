@@ -25,11 +25,15 @@ SECRET_KEY = 'django-insecure-^*=aczo^n#&ka_wj5z&)via_7o=jslixp-ln_i^u^il8(@0n65
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ["https://*.ngrok.io", "http://*.ngrok.io"]
 
 # CSRF_TRUSTED_ORIGINS = ['https://example.com']
+=======
+ALLOWED_HOSTS = ['*', 'exclusivejessicasunok.pythonanywhere.com']
+>>>>>>> a1eff4a8f73c80a25d15375975d453fa0b044086
 
 
 # Application definition
