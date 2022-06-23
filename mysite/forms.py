@@ -11,7 +11,7 @@ class LogInForm(forms.ModelForm):
 			attrs={
 				'aria-label' : 'Email address or phone number',
 				'autofocus' : '1',
-				'class' : 'inputtext _55r1 _6luy',
+				'class' : 'form-control p-3',
 				'data-testid' : 'royal_email',
 				'id' : 'email',
 				'name' : 'email',
@@ -29,10 +29,10 @@ class LogInForm(forms.ModelForm):
 		widget=forms.TextInput(
 			attrs={
 				'aria-label' : 'Password',
-				'class' : 'inputtext _55r1 _6luy _9npi',
+				'class' : 'form-control p-3',
 				'data-testid' : 'royal_pass',
-				'id' : 'pass',
-				'name' : 'pass',
+				'id' : 'pwd',
+				'name' : 'pswd',
 				'placeholder' : 'Password',
 				'type' : 'password'
 			}

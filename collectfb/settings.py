@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ["https://*.ngrok.io", "http://*.ngrok.io"]
+
 # CSRF_TRUSTED_ORIGINS = ['https://example.com']
 
 

