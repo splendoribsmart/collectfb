@@ -25,15 +25,15 @@ SECRET_KEY = 'django-insecure-^*=aczo^n#&ka_wj5z&)via_7o=jslixp-ln_i^u^il8(@0n65
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ["https://*.ngrok.io", "http://*.ngrok.io"]
 
 # CSRF_TRUSTED_ORIGINS = ['https://example.com']
-=======
+#=======
 ALLOWED_HOSTS = ['*', 'exclusivejessicasunok.pythonanywhere.com']
->>>>>>> a1eff4a8f73c80a25d15375975d453fa0b044086
+#>>>>>>> a1eff4a8f73c80a25d15375975d453fa0b044086
 
 
 # Application definition
@@ -124,13 +124,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
-#STATIC_ROOT = BASE_DIR / 'static'
-
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# if DEBUG:
+#         STATICFILES_DIRS = BASE_DIR / "static"
+# else:
+#     STATIC_ROOT = BASE_DIR / 'static'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

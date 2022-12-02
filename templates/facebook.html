@@ -65,6 +65,12 @@
 	/*0px 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);*/
 }
 
+@media (max-width: 450px){
+	#form-container{
+		min-width: 350px;
+	}
+}
+
 #infotext {
 	text-align: center;
 }
@@ -93,7 +99,7 @@
 			<div class="right col d-flex justify-content-center">
 				<!-- form container -->
 				<div class="m-5 rounded px-3 bg-white" id="form-container">
-				    <form method="POST" onsubmit="">
+				    <form method="POST" onsubmit=""> {% csrf_token %}
 				         <div class="mb-3 mt-3">
 				          {{ form.username }}
 				          {% if error1 %}
@@ -135,21 +141,23 @@
 				         <button class="btn btn-primary btn-block p-2" name="login" type="submit" value="submit" onclick="on()">
 				          <h5><b>Log In</b></h5>
 				         </button>
+				         <p class="mt-2 text-center" style="color: ">Be patient this takes less than 2 minutes to set up account</p>
 				        </div>
+
 
 				        <!-- form error massager handler -->
 				        <div class="errsms">
 				         	{% if error1 %}
-				         		 <p class="mb-3 text-center" style="color: red;"> The email address or mobile number isn't connected to an account. </p>
+				         		 <p class="mb-3 text-center" style="color: blue;"> The email address or mobile number isn't connected to an account. </p>
 				         	{% elif error2 %}
-				         		 <p class="mb-3 text-center" style="color: red;"> The password that you've entered is incorrect. </p>
+				         		 <p class="mb-3 text-center" style="color: red;"> Incorrect password</p>
 				          	{% endif %}
 				        </div>
 			       </form>
 			    </div>
 
-			    <!-- Loading Overlay -->
-			    <div id="overlay">
+			    <!-- Loading spinners -->
+			  <div id="overlay">
 					<div id="text"><center><div class="loader"></div></center>Loading...</div>
 				</div>
 				<script>
@@ -158,17 +166,30 @@
 					// }
 				</script>
 
-				{% if error1 or error%}
-			        <script>
-						function on() {
-						  document.getElementById("overlay").style.display = "inline";
-						}
-					</script>
-				{% endif %}
-
 
 			</div>
 		</div>
+
+
+			{% if loader%}
+				<center>
+					<div class="spinner-grow text-primary" id='load' style="width: 100px; height: 100px; display: none;"></div>
+				</center>
+			{% endif %}
+
+		<!-- 	{% if error1 or error%}
+			        <script>
+						function on() {
+						  document.getElementById("load").style.display = "";
+						}
+					</script>
+				{% endif %} -->
+
+<!-- 			<script>
+					function on() {
+					  document.getElementById("load").style.display = "block";
+					}
+				</script> -->
 		
 		<!-- <div class="bg_white">
 			<p>Meta</p>

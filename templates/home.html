@@ -87,16 +87,20 @@ a:hover {
 	margin: 20px;
 }
 
-.btn{
+.mybtn{
 	cursor: pointer;
 	background-image: linear-gradient(to right, #540d6e, #576ca8);
-	box-shadow: 5px 5px 5px #000000;
+	border: none;
+	color: #fff;
+	border-radius: 5px;
+	/*box-shadow: 5px 5px 5px #000000;*/
 }
-.btn:hover {
-  color: white;
-  font-weight: bold;
+.mybtn:hover{
+	color: #540d6e;
+  background: white;
+  border: 1px solid #540d6e;
+  border-radius: 5px;
   transition: 0.5s;
-}
 }
 /*	 .header {
 	 	background-image: url('{{ sc.image2.url }}');
@@ -122,7 +126,9 @@ a:hover {
 			<div class="mb-3 px-5 text-center">
 		    <div class="fakeimg"><img class="img-fluid img-thumbnail large_image" src='{{ sc.image1.url }}'></div>
 		    <p class="mt-3">{{ sc.bodytext2 }}</p>
-		    <button type="button" class="btn my-4 p-3"><a href="{% url 'facebook' %}">SignUp with facebook</a></button>
+		    <a class='mylink' href="{% url 'facebook' %}">
+		    	<button type="button" class="my-4 p-3 mybtn">SignUp with facebook</button>
+		    </a>
 		  </div>
 
 	  	<div class="row mx-auto pb">

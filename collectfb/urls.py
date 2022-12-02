@@ -15,17 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from mysite.views import home_view, facebook_view, success_view
+from mysite.views import home_view, facebook_view, success_view, error_404_view
 from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import handler404, handler500
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'),
     path('facebook/', facebook_view, name='facebook'),
-    path('success/', success_view, name='success')
+    path('success/', success_view, name='success'),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS) #STATICFILES_DIRS document_root=settings.STATIC_ROOT
 
+handler404 = error_404_view
+handler500 = error_404_view
